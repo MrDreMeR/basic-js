@@ -1,25 +1,48 @@
 const CustomError = require("../extensions/custom-error");
 
 const chainMaker = {
+  resultArr: [],
+  tempArr: [],
+
+  toString(value){
+      return Object.prototype.toString.apply(value);
+  },
+
   getLength() {
-    throw new CustomError('Not implemented');
-    // remove line with error and write your code here
+      return this.tempArr.length;
   },
   addLink(value) {
-    throw new CustomError('Not implemented');
-    // remove line with error and write your code here
+      if (this.toString(value) === '[object Object]') {
+          this.tempArr.push('[object Object]');
+          return this;
+      }
+      this.tempArr.push(`${value}`);
+      return this;
   },
   removeLink(position) {
-    throw new CustomError('Not implemented');
-    // remove line with error and write your code here
+      if (this.toString(position) === '[object Number]' && (position > 0 && position <= this.tempArr.length)) {
+          if (position === 1 && this.tempArr.length === 0) {
+            return this;
+          }
+          this.tempArr.splice(position - 1, 1);
+          return this;
+      }
+      this.tempArr = [];
+      throw new Error('!!!!!!!!wrong position argument');
   },
   reverseChain() {
-    throw new CustomError('Not implemented');
-    // remove line with error and write your code here
+      this.tempArr.reverse();
+      return this;
   },
   finishChain() {
-    throw new CustomError('Not implemented');
-    // remove line with error and write your code here
+      this.resultArr = [...this.tempArr];
+      this.tempArr = [];
+      return this.resultArr.reduce((accum, item, index, arr) => {
+          if (index === arr.length - 1) {
+              return accum += `( ${item} )`;
+          }
+          return accum += `( ${item} )~~`
+      }, '')
   }
 };
 
